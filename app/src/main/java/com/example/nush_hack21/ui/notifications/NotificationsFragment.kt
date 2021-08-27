@@ -149,10 +149,17 @@ private var _binding: FragmentNotificationsBinding? = null
     Log.d("BarcodeValue", value)
     GetBarcodeData(value, object: GetBarcodeData.AsyncResponse {
       override fun processFinish(output: String) {
-        // Remove all characters before title
-        val titleStart = output.substring(output.indexOf("\"title\":\"")).substring(9)
-        val title = titleStart.substring(0, titleStart.indexOf('"'))
-        Log.d("title", title)
+        // This code is fucking ugly but im too lazy to import klaxon and deal with null safety shit
+        // Code will not break as long as api response format does not change
+        // total denotes if there is data on this barcode
+        val total = output.substring(output.indexOf("\"total\":")).substring(8, 9).toInt()
+        if (total != 0) {
+          // Remove all characters before title
+          val titleStart = output.substring(output.indexOf("\"title\":\"")).substring(9)
+          val title = titleStart.substring(0, titleStart.indexOf('"'))
+          Log.d("title", title)
+        }
+        else Log.d("title", "no data on product")
       }
     }).execute()
   }
