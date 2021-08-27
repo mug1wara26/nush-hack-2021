@@ -6,11 +6,16 @@ import android.graphics.Color
 import android.os.Build
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
+import androidx.camera.core.Preview
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.nush_hack21.R
@@ -53,7 +58,31 @@ class ImageFragment : Fragment() {
         cameraExecutor = Executors.newSingleThreadExecutor()
     }
 
-    private fun startCamera() {}
+    private fun startCamera() {
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
+        val previewView = view?.findViewById<PreviewView>(R.id.viewFinder)
+
+        cameraProviderFuture.addListener({
+            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
+
+            val preview = Preview.Builder().build().also {
+                it.setSurfaceProvider(
+                    previewView?.surfaceProvider
+                )
+            }
+
+            // Select back camera
+            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+            try {
+                // Unbind any bound use cases before rebinding
+                cameraProvider.unbindAll()
+                // Bind use cases to lifecycleOwner
+                cameraProvider.bindToLifecycle(this, cameraSelector, preview)
+            } catch (e: Exception) {
+                Log.e("PreviewUseCase", "Binding failed! :(", e)
+            }
+        }, ContextCompat.getMainExecutor(requireContext()))
+    }
 
 //    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
 //        ContextCompat.checkSelfPermission(
