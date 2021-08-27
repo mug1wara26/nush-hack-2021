@@ -1,8 +1,11 @@
 package com.example.nush_hack21.ui.notifications
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -13,10 +16,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.camera.core.CameraSelector
-import androidx.camera.core.ImageCapture
-import androidx.camera.core.ImageCaptureException
-import androidx.camera.core.Preview
+import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -25,8 +25,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.example.nush_hack21.R
 import com.example.nush_hack21.databinding.FragmentNotificationsBinding
+import com.google.mlkit.vision.barcode.Barcode
+import com.google.mlkit.vision.barcode.BarcodeScannerOptions
+import com.google.mlkit.vision.barcode.BarcodeScanning
+import com.google.mlkit.vision.common.InputImage
 import kotlinx.android.synthetic.main.fragment_notifications.*
 import java.io.File
+import java.io.IOException
+import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
@@ -95,45 +101,63 @@ private var _binding: FragmentNotificationsBinding? = null
     return if (mediaDir != null && mediaDir.exists())
       mediaDir else activity?.filesDir!!
   }
-  private fun showProgressDialog(){
-    progressDialog = ProgressDialog(context)
-    with(progressDialog){
-      setTitle("Sending request")
-      setMessage("Hold on a while")
-      setProgressStyle(ProgressDialog.STYLE_SPINNER)
-      show()
-    }
-  }
 
   private fun takePhoto() {
-    showProgressDialog()
     // Get a stable reference of the modifiable image capture use case
     val imageCapture = imageCapture ?: return
-
-    // Create time-stamped output file to hold the image
-    val photoFile = File(
-      getOutputDirectory(),
-      SimpleDateFormat(FILENAME_FORMAT, Locale.US
-      ).format(System.currentTimeMillis()) + ".jpg")
-
-    // Create output options object which contains file + metadata
-    val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
     // Set up image capture listener, which is triggered after photo has
     // been taken
-    imageCapture.takePicture(
-      outputOptions, ContextCompat.getMainExecutor(context), object : ImageCapture.OnImageSavedCallback {
-        override fun onError(exc: ImageCaptureException) {
-          Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
+    imageCapture.takePicture(ContextCompat.getMainExecutor(context), object: ImageCapture.OnImageCapturedCallback() {
+      @SuppressLint("UnsafeOptInUsageError")
+      override fun onCaptureSuccess(imageProxy: ImageProxy) {
+        //get bitmap from image
+        val mediaImage = imageProxy.image
+        if (mediaImage != null) {
+          val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
+          scanBarcode(image, imageProxy)
         }
-        @RequiresApi(Build.VERSION_CODES.P)
-        override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-          val savedUri = Uri.fromFile(photoFile)
-          val msg = "Photo capture succeeded: $savedUri"
-          Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-          Log.d(TAG, msg)
+        super.onCaptureSuccess(imageProxy)
+      }
 
+      override fun onError(exception: ImageCaptureException) {
+        super.onError(exception)
+      }
+    })
+  }
+
+  private fun scanBarcode(image: InputImage, imageProxy: ImageProxy) {
+    val options = BarcodeScannerOptions.Builder()
+      .setBarcodeFormats(
+        Barcode.FORMAT_EAN_13)
+      .build()
+
+    val scanner = BarcodeScanning.getClient()
+
+    scanner.process(image)
+      .addOnSuccessListener { barcodes ->
+        // Task completed successfully
+        if (barcodes.size == 0)
+          Toast.makeText(context, "No barcode detected, make sure you have adequate lighting and image is focused", Toast.LENGTH_LONG).show()
+        for (barcode in barcodes) {
+          Toast.makeText(context, "Barcode scanned", Toast.LENGTH_SHORT).show()
+          getBarcodeData(barcode)
         }
-      })
+      }
+      .addOnFailureListener {
+        Log.e("BarcodeScanFailure", it.stackTraceToString())
+        Toast.makeText(context, "Error occurred, unable to scan", Toast.LENGTH_LONG).show()
+      }
+      .addOnCompleteListener {
+        // It's important to close the imageProxy
+        imageProxy.close()
+      }
+
+    cameraAddBtn.isClickable = true
+  }
+
+  private fun getBarcodeData(barcode: Barcode) {
+    Log.d("BarcodeValue", barcode.rawValue!!)
+
   }
 
   private fun startCamera() {
@@ -164,6 +188,7 @@ private var _binding: FragmentNotificationsBinding? = null
 
     }, ContextCompat.getMainExecutor(context))
   }
+
   override fun onRequestPermissionsResult(
     requestCode: Int, permissions: Array<String>, grantResults:
     IntArray) {

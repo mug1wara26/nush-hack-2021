@@ -53,7 +53,7 @@ class ImageFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         // Request camera permissions
-        startCamera()
+        // startCamera()
 
         // Set up the listener for take photo button
 //        camera_capture_button.setOnClickListener { takePhoto() }
@@ -63,65 +63,12 @@ class ImageFragment : Fragment() {
         cameraExecutor = Executors.newSingleThreadExecutor()
     }
 
-    private fun startCamera() {
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
-        val previewView = view?.findViewById<PreviewView>(R.id.viewFinder)
-
-        cameraProviderFuture.addListener({
-            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
-
-            val preview = Preview.Builder().build().also {
-                it.setSurfaceProvider(
-                    previewView?.surfaceProvider
-                )
-            }
-
-            // Select back camera
-            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-            try {
-                // Unbind any bound use cases before rebinding
-                cameraProvider.unbindAll()
-                // Bind use cases to lifecycleOwner
-                cameraProvider.bindToLifecycle(this, cameraSelector, preview)
-            } catch (e: Exception) {
-                Log.e("PreviewUseCase", "Binding failed! :(", e)
-            }
-        }, ContextCompat.getMainExecutor(requireContext()))
-    }
-
 //    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
 //        ContextCompat.checkSelfPermission(
 //            baseContext, it) == PackageManager.PERMISSION_GRANTED
 //    }
 
-    private fun scanBarcode(uri: Uri) {
-        val options = BarcodeScannerOptions.Builder()
-            .setBarcodeFormats(
-                Barcode.FORMAT_EAN_13,
-                Barcode.FORMAT_AZTEC)
-            .build()
 
-        val image: InputImage
-        try {
-            image = InputImage.fromFilePath(context, uri)
-
-            val scanner = BarcodeScanning.getClient()
-
-            val result = scanner.process(image)
-                .addOnSuccessListener { barcodes ->
-                    // Task completed successfully
-                    for (barcode in barcodes) {
-                        print("Value: ${barcode.rawValue}")
-                        print("Type: ${barcode.valueType}")
-                    }
-                }
-                .addOnFailureListener {
-                    Log.e("BarcodeScanFailure", it.stackTraceToString())
-                }
-        } catch (e: IOException) {
-            Log.e("BarcodeScanFailure", e.stackTraceToString())
-        }
-    }
 
 
     override fun onDestroy() {
