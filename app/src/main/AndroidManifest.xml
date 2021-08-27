@@ -12,14 +12,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Nush_hack21" >
         <activity
-            android:name=".NavigationActivity"
+            android:name=".LoginActivity"
             android:exported="true"
-            android:label="@string/title_activity_navigation" >
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+            android:label="Login Activity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".NavigationActivity">
         </activity>
     </application>
 
