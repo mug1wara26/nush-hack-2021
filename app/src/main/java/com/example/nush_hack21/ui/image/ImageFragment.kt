@@ -3,6 +3,7 @@ package com.example.nush_hack21.ui.image
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -19,7 +20,12 @@ import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.nush_hack21.R
+import com.google.mlkit.vision.barcode.Barcode
+import com.google.mlkit.vision.barcode.BarcodeScannerOptions
+import com.google.mlkit.vision.barcode.BarcodeScanning
+import com.google.mlkit.vision.common.InputImage
 import java.io.File
+import java.io.IOException
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -89,6 +95,34 @@ class ImageFragment : Fragment() {
 //            baseContext, it) == PackageManager.PERMISSION_GRANTED
 //    }
 
+    private fun scanBarcode(uri: Uri) {
+        val options = BarcodeScannerOptions.Builder()
+            .setBarcodeFormats(
+                Barcode.FORMAT_EAN_13,
+                Barcode.FORMAT_AZTEC)
+            .build()
+
+        val image: InputImage
+        try {
+            image = InputImage.fromFilePath(context, uri)
+
+            val scanner = BarcodeScanning.getClient()
+
+            val result = scanner.process(image)
+                .addOnSuccessListener { barcodes ->
+                    // Task completed successfully
+                    for (barcode in barcodes) {
+                        print("Value: ${barcode.rawValue}")
+                        print("Type: ${barcode.valueType}")
+                    }
+                }
+                .addOnFailureListener {
+                    Log.e("BarcodeScanFailure", it.stackTraceToString())
+                }
+        } catch (e: IOException) {
+            Log.e("BarcodeScanFailure", e.stackTraceToString())
+        }
+    }
 
 
     override fun onDestroy() {
