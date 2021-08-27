@@ -1,7 +1,6 @@
 package com.example.nush_hack21.ui.productlist.placeholder
 
-import java.util.ArrayList
-import java.util.HashMap
+import java.util.*
 
 /**
  * Helper class for providing sample content for user interfaces created by

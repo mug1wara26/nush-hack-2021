@@ -8,7 +8,6 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.example.nush_hack21.R
 import com.example.nush_hack21.databinding.FragmentDashboardBinding
 
 class DashboardFragment : Fragment() {

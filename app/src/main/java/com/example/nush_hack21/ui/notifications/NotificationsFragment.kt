@@ -4,25 +4,17 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import com.example.nush_hack21.R
 import com.example.nush_hack21.databinding.FragmentNotificationsBinding
 import com.google.mlkit.vision.barcode.Barcode
@@ -31,10 +23,6 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import kotlinx.android.synthetic.main.fragment_notifications.*
 import java.io.File
-import java.io.IOException
-import java.nio.ByteBuffer
-import java.text.SimpleDateFormat
-import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -156,8 +144,13 @@ private var _binding: FragmentNotificationsBinding? = null
   }
 
   private fun getBarcodeData(barcode: Barcode) {
-    Log.d("BarcodeValue", barcode.rawValue!!)
-
+    val value = barcode.rawValue!!
+    Log.d("BarcodeValue", value)
+    GetBarcodeData(value, object: GetBarcodeData.AsyncResponse {
+      override fun processFinish(output: String) {
+        Log.d("Json Barcode", output)
+      }
+    }).execute()
   }
 
   private fun startCamera() {

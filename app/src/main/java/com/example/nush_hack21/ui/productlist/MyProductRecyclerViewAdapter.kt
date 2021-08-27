@@ -1,13 +1,10 @@
 package com.example.nush_hack21.ui.productlist
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.example.nush_hack21.R
+import androidx.recyclerview.widget.RecyclerView
 import com.example.nush_hack21.databinding.FragmentItemBinding
-
 import com.example.nush_hack21.ui.productlist.placeholder.PlaceholderContent.PlaceholderItem
 
 /**
