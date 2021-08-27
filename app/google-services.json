@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "247031382240",
+    "project_id": "nush-hack21",
+    "storage_bucket": "nush-hack21.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:247031382240:android:41500024c1a5fef2d6d085",
+        "android_client_info": {
+          "package_name": "com.example.nush_hack21"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "247031382240-u2e7p8iugdut65sraalscsue787jaobf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.nush_hack21",
+            "certificate_hash": "a3b65ee9958cec2708d7935a379c082d11fa09f4"
+          }
+        },
+        {
+          "client_id": "247031382240-t02ac65165d0glvb3puje4do17rpthjo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSM_tUJsQZJFsUQv9rYuQCOohpUBrKm2M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "247031382240-t02ac65165d0glvb3puje4do17rpthjo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
