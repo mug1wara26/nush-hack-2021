@@ -2,7 +2,8 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph">
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/productFragment">
 
     <fragment
         android:id="@+id/dashboardFragment"
@@ -20,8 +21,25 @@
         android:label="fragment_notifications"
         tools:layout="@layout/fragment_notifications" />
     <fragment
-        android:id="@+id/imageFragment2"
+        android:id="@+id/imageFragment"
         android:name="com.example.nush_hack21.ui.image.ImageFragment"
         android:label="image_fragment"
-        tools:layout="@layout/image_fragment" />
+        tools:layout="@layout/image_fragment" >
+        <action
+            android:id="@+id/action_imageFragment_to_productFragment"
+            app:destination="@id/productFragment" />
+        <action
+            android:id="@+id/action_imageFragment_to_snapshotActivity"
+            app:destination="@id/snapshotActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/productFragment"
+        android:name="com.example.nush_hack21.ui.productlist.ProductFragment"
+        android:label="fragment_item_list"
+        tools:layout="@layout/fragment_item_list" />
+    <activity
+        android:id="@+id/snapshotActivity"
+        android:name="com.example.nush_hack21.ui.image.SnapshotActivity"
+        android:label="activity_snapshot"
+        tools:layout="@layout/activity_snapshot" />
 </navigation>

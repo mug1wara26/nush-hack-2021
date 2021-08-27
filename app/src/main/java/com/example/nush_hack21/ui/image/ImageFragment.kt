@@ -49,7 +49,6 @@ class ImageFragment : Fragment() {
         // Request camera permissions
         startCamera()
 
-
         // Set up the listener for take photo button
 //        camera_capture_button.setOnClickListener { takePhoto() }
 //
