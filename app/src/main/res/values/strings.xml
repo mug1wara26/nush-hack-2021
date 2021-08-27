@@ -15,4 +15,5 @@
     <string name="title_notifications">Notifications</string>
     <string name="snapshot">Snapshot</string>
     <string name="we_are_logging_you_in">We are logging you in</string>
+    <string name="add">Add</string>
 </resources>
