@@ -143,12 +143,16 @@ private var _binding: FragmentNotificationsBinding? = null
     cameraAddBtn.isClickable = true
   }
 
+  // Impt function, gives us title of product
   private fun getBarcodeData(barcode: Barcode) {
     val value = barcode.rawValue!!
     Log.d("BarcodeValue", value)
     GetBarcodeData(value, object: GetBarcodeData.AsyncResponse {
       override fun processFinish(output: String) {
-        Log.d("Json Barcode", output)
+        // Remove all characters before title
+        val titleStart = output.substring(output.indexOf("\"title\":\"")).substring(9)
+        val title = titleStart.substring(0, titleStart.indexOf('"'))
+        Log.d("title", title)
       }
     }).execute()
   }
