@@ -193,8 +193,8 @@ class ImageFragment : Fragment() {
                             items.add(product)
 
                             user.history.add(record)
-                            writeAppendHistToDB(record)
                             setProductPoints(product)
+                            writeAppendHistToDB(record)
                         }
                     },{})
 
@@ -213,6 +213,8 @@ class ImageFragment : Fragment() {
             Log.d("redbull", it)
             val scoreStart = it.substring(it.indexOf("score"))
             product.points = scoreStart.substring(scoreStart.indexOf(' ') + 1, scoreStart.indexOf(',')).toInt()
+
+            Log.d("product", product.toString())
         }, { })
         queue.add(stringRequest)
     }
