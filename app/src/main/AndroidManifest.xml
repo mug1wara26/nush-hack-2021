@@ -22,6 +22,11 @@
             android:exported="true"
             android:label="Login Activity" >
         </activity>
+        <activity
+            android:name=".ui.image.ItemActivity"
+            android:exported="true"
+            android:label="Item Activity" >
+        </activity>
         <activity android:name=".NavigationActivity"
             android:exported="true">
             <intent-filter>

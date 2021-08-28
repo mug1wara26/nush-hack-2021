@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nush_hack21.R
 import com.example.nush_hack21.model.Product
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.card_product.view.*
 
 class ProductAdapter(private val items: List<Product>) : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -20,7 +22,8 @@ class ProductAdapter(private val items: List<Product>) : RecyclerView.Adapter<Pr
 
     class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         fun bind(product: Product) {
-
+            view.productTitle.text = product.title
+            Picasso.get().load(product.imageUrl).into(view.productImg)
         }
     }
 }

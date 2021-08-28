@@ -1,13 +1,9 @@
 package com.example.nush_hack21.ui.image
 
 import android.Manifest
-import android.app.ProgressDialog
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
-import android.net.Uri
-import android.os.Build
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -15,25 +11,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.camera.core.CameraSelector
-import androidx.camera.core.ImageCapture
-import androidx.camera.core.ImageCaptureException
-import androidx.camera.core.Preview
+import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.view.PreviewView
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.navigation.Navigation
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import com.example.nush_hack21.R
-import com.example.nush_hack21.ui.productlist.ProductFragment
-import kotlinx.android.synthetic.main.fragment_notifications.*
+import com.example.nush_hack21.model.Product
+import com.example.nush_hack21.model.ProductSearch
+import com.example.nush_hack21.ui.notifications.GetBarcodeData
+import com.google.mlkit.vision.barcode.Barcode
+import com.google.mlkit.vision.barcode.BarcodeScannerOptions
+import com.google.mlkit.vision.barcode.BarcodeScanning
+import com.google.mlkit.vision.common.InputImage
 import kotlinx.android.synthetic.main.image_fragment.*
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -47,6 +37,8 @@ class ImageFragment : Fragment() {
     private lateinit var outputDirectory: File
     private lateinit var cameraExecutor: ExecutorService
 
+    val items = mutableListOf<Product>()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -57,47 +49,39 @@ class ImageFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        // Request camera permissions
         if(allPermissionsGranted()){
             startCamera()
         } else{
             this.requestPermissions(
                 REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
         }
-
-
-
-
-        // Set up the listener for take photo button
-//
+        cameraCaptureBtn.setOnClickListener {
+//            Toast.makeText(requireContext(),"Sending image request to server",Toast.LENGTH_SHORT).show()
+            cameraCaptureBtn.isClickable = false
+            takePhoto()
+        }
+        showListItem.setOnClickListener {
+            val tmp = arrayListOf<Product>()
+            tmp.addAll(items)
+            Log.i("showlistitem",tmp.toString())
+            val intent = Intent(context,ItemActivity::class.java).apply {
+                putParcelableArrayListExtra("items", tmp)
+            }
+            startActivity(intent)
+        }
         outputDirectory = getOutputDirectory()
 
         cameraExecutor = Executors.newSingleThreadExecutor()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
 
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
-        cameraCaptureBtn.setOnClickListener { takePhoto() }
-        showListItem.setOnClickListener {
-            val intent = Intent(context,ItemActivity::class.java)
-            startActivity(intent)
-        }
-//        showListItem.setOnClickListener {
-//            Log.i(TAG,"showlist");
-//            view.findNavController().navigate(R.id.action_imageFragment_to_productFragment)
-//        }
+    override fun onDestroyView() {
+        super.onDestroyView()
     }
 
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
@@ -115,30 +99,84 @@ class ImageFragment : Fragment() {
     private fun takePhoto() {
         // Get a stable reference of the modifiable image capture use case
         val imageCapture = imageCapture ?: return
-
-        // Create time-stamped output file to hold the image
-        val photoFile = File(
-            getOutputDirectory(),
-            SimpleDateFormat(FILENAME_FORMAT, Locale.US
-            ).format(System.currentTimeMillis()) + ".jpg")
-
-        // Create output options object which contains file + metadata
-        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
         // Set up image capture listener, which is triggered after photo has
         // been taken
-        imageCapture.takePicture(
-            outputOptions, ContextCompat.getMainExecutor(context), object : ImageCapture.OnImageSavedCallback {
-                override fun onError(exc: ImageCaptureException) {
-                    Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
+        imageCapture.takePicture(ContextCompat.getMainExecutor(context), object: ImageCapture.OnImageCapturedCallback() {
+            @SuppressLint("UnsafeOptInUsageError")
+            override fun onCaptureSuccess(imageProxy: ImageProxy) {
+                //get bitmap from image
+                val mediaImage = imageProxy.image
+                if (mediaImage != null) {
+                    val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
+                    scanBarcode(image, imageProxy)
                 }
-                @RequiresApi(Build.VERSION_CODES.P)
-                override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                    val savedUri = Uri.fromFile(photoFile)
-                    val msg = "Photo capture succeeded: $savedUri"
-                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-                    Log.d(TAG, msg)
+                super.onCaptureSuccess(imageProxy)
+            }
+
+            override fun onError(exception: ImageCaptureException) {
+                super.onError(exception)
+            }
+        })
+    }
+
+    private fun scanBarcode(image: InputImage, imageProxy: ImageProxy) {
+        val options = BarcodeScannerOptions.Builder()
+            .setBarcodeFormats(
+                Barcode.FORMAT_EAN_13)
+            .build()
+
+        val scanner = BarcodeScanning.getClient()
+
+        scanner.process(image)
+            .addOnSuccessListener { barcodes ->
+                // Task completed successfully
+                if (barcodes.size == 0)
+                    Toast.makeText(context, "No barcode detected, make sure you have adequate lighting and image is focused", Toast.LENGTH_LONG).show()
+                Toast.makeText(context,"${barcodes.size} barcodes scanned",Toast.LENGTH_SHORT).show()
+                for (barcode in barcodes) {
+//                    Toast.makeText(context, "Barcode scanned", Toast.LENGTH_SHORT).show()
+                    getBarcodeData(barcode)
                 }
-            })
+            }
+            .addOnFailureListener {
+                Log.e("BarcodeScanFailure", it.stackTraceToString())
+                Toast.makeText(context, "Error occurred, unable to scan", Toast.LENGTH_LONG).show()
+            }
+            .addOnCompleteListener {
+                // It's important to close the imageProxy
+                imageProxy.close()
+            }
+
+        cameraCaptureBtn.isClickable = true
+    }
+
+    // Impt function, gives us title of product
+    private fun getBarcodeData(barcode: Barcode) {
+        val value = barcode.rawValue!!
+        Log.d("BarcodeValue", value)
+        GetBarcodeData(value, object: GetBarcodeData.AsyncResponse {
+            override fun processFinish(output: String) {
+                // This code is fucking ugly but im too lazy to import klaxon and deal with null safety shit
+                // Code will not break as long as api response format does not change
+                // total denotes if there is data on this barcode
+                val total = output.substring(output.indexOf("\"total\":")).substring(8, 9).toInt()
+                if (total != 0) {
+                    // Remove all characters before title
+                    val titleStart = output.substring(output.indexOf("\"title\":\"")).substring(9)
+                    val title = titleStart.substring(0, titleStart.indexOf('"'))
+
+                    ProductSearch(requireContext()).productSearch(title, {res ->
+                        Log.i("productsearch",res.toString())
+                        if (res.shopping_results.isNotEmpty())
+                            items.add(Product(res.shopping_results[0].title,res.shopping_results[0].thumbnail))
+                    },{})
+
+//                    items.add(Product(title))
+                    Log.d("title", title)
+                }
+                else Log.d("title", "no data on product")
+            }
+        }).execute()
     }
 
     private fun startCamera() {
@@ -169,6 +207,7 @@ class ImageFragment : Fragment() {
 
         }, ContextCompat.getMainExecutor(context))
     }
+
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<String>, grantResults:
         IntArray) {
@@ -179,7 +218,7 @@ class ImageFragment : Fragment() {
                 Toast.makeText(context,
                     "Permissions not granted by the user.",
                     Toast.LENGTH_SHORT).show()
-                Navigation.findNavController(requireView()).popBackStack()
+//        Navigation.findNavController(requireView()).popBackStack()
             }
         }
     }
@@ -193,4 +232,5 @@ class ImageFragment : Fragment() {
         private const val REQUEST_CODE_PERMISSIONS = 10
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
     }
+
 }
