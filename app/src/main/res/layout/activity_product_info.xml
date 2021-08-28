@@ -78,6 +78,12 @@
                         app:setBackgroundColor="@color/white"
                         app:setSecondaryColor="@color/purple_700"
                         app:setTextColor="@color/purple_700" />
+
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentBottom="true" />
+
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
             <View
@@ -88,10 +94,6 @@
 
 
 
-            <com.malinskiy.superrecyclerview.SuperRecyclerView
-                android:id="@+id/altProductList"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
 
         </LinearLayout>
 

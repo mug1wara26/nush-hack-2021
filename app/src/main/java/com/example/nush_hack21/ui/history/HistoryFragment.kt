@@ -11,6 +11,7 @@ import com.example.nush_hack21.R
 import com.example.nush_hack21.model.Product
 import com.example.nush_hack21.ui.image.adapters.ProductAdapter
 import com.example.nush_hack21.user
+import kotlinx.android.synthetic.main.activity_product_info.*
 
 
 class HistoryFragment : Fragment() {
@@ -31,6 +32,8 @@ class HistoryFragment : Fragment() {
         user.history.forEach {
             products.add(it.product)
         }
+        products.reverse()
+
 
         val productAdapter = ProductAdapter(products.toArray().toList() as List<Product>, requireContext())
 

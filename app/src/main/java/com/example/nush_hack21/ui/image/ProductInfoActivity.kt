@@ -38,11 +38,12 @@ class ProductInfoActivity : AppCompatActivity() {
     }
 
     fun populateAlternatives() {
-        ProductSearch(this).productSearch(product.title, { res ->
-            if (res.shopping_results.isNotEmpty()) {
-                val altOptions = res.shopping_results.map { Product(it.title, it.thumbnail) }
-            }
-        },{})
+//        ProductSearch(this).productSearch(product.title, { res ->
+//            if (res.shopping_results.isNotEmpty()) {
+//                val altOptions = res.shopping_results.map { Product(it.title, it.thumbnail) }
+//            }
+//        },{})
+
 
     }
 }

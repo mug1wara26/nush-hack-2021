@@ -35,6 +35,7 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import kotlinx.android.synthetic.main.image_fragment.*
 import java.io.File
+import java.lang.NullPointerException
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
@@ -66,7 +67,6 @@ class ImageFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -145,25 +145,35 @@ class ImageFragment : Fragment() {
 
         val scanner = BarcodeScanning.getClient()
 
-        scanner.process(image)
-            .addOnSuccessListener { barcodes ->
-                // Task completed successfully
-                if (barcodes.size == 0)
-                    Toast.makeText(context, "No barcode detected, make sure you have adequate lighting and image is focused", Toast.LENGTH_LONG).show()
-                Toast.makeText(context,"${barcodes.size} barcodes scanned",Toast.LENGTH_SHORT).show()
-                for (barcode in barcodes) {
+        try {
+            scanner.process(image)
+                .addOnSuccessListener { barcodes ->
+                    // Task completed successfully
+                    if (barcodes.size == 0)
+                        Toast.makeText(
+                            context,
+                            "No barcode detected, make sure you have adequate lighting and image is focused",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    Toast.makeText(context, "${barcodes.size} barcodes scanned", Toast.LENGTH_SHORT)
+                        .show()
+                    for (barcode in barcodes) {
 //                    Toast.makeText(context, "Barcode scanned", Toast.LENGTH_SHORT).show()
-                    getBarcodeData(barcode)
+                        getBarcodeData(barcode)
+                    }
                 }
-            }
-            .addOnFailureListener {
-                Log.e("BarcodeScanFailure", it.stackTraceToString())
-                Toast.makeText(context, "Error occurred, unable to scan", Toast.LENGTH_LONG).show()
-            }
-            .addOnCompleteListener {
-                // It's important to close the imageProxy
-                imageProxy.close()
-            }
+                .addOnFailureListener {
+                    Log.e("BarcodeScanFailure", it.stackTraceToString())
+                    Toast.makeText(context, "Error occurred, unable to scan", Toast.LENGTH_LONG)
+                        .show()
+                }
+                .addOnCompleteListener {
+                    // It's important to close the imageProxy
+                    imageProxy.close()
+                }
+        }catch (npe: NullPointerException) {
+            npe.printStackTrace()
+        }
 
         cameraCaptureBtn.isClickable = true
     }
@@ -221,13 +231,19 @@ class ImageFragment : Fragment() {
 
     fun writeAppendHistToDB(record: Record) {
 //        const val dbUrl = "http://172.105.114.129/"
-        val queue = Volley.newRequestQueue(context);
-        val url = "${dbUrl}append_hist?data={\"uid\":\"${user.uid}\",\"hist\":${Gson().toJson(record)}}"
-        val stringRequest = StringRequest(
-            Request.Method.GET, url,
-            {},
-            {  })
-        queue.add(stringRequest)
+        if(context == null) return
+        try {
+            val queue = Volley.newRequestQueue(context);
+            val url =
+                "${dbUrl}append_hist?data={\"uid\":\"${user.uid}\",\"hist\":${Gson().toJson(record)}}"
+            val stringRequest = StringRequest(
+                Request.Method.GET, url,
+                {},
+                { })
+            queue.add(stringRequest)
+        } catch (ex: NullPointerException) {
+            ex.printStackTrace()
+        }
     }
 
     private fun startCamera() {

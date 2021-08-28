@@ -82,9 +82,12 @@ class HomeFragment : Fragment() {
             }
             val pieEntries: ArrayList<PieEntry> = ArrayList()
             val colors: ArrayList<Int> = ArrayList()
-            colors.add(Color.parseColor("#FFC300"))
-            colors.add(Color.parseColor("#41B883"))
-            colors.add(Color.parseColor("#ff6347"))
+//            colors.add(Color.parseColor("#FFC300"))
+//            colors.add(Color.parseColor("#41B883"))
+//            colors.add(Color.parseColor("#ff6347"))
+            colors.add(Color.parseColor("#304567"));
+            colors.add(Color.parseColor("#309967"));
+            colors.add(Color.parseColor("#476567"));
             for (type in typeAmountMap.keys) {
                 pieEntries.add(PieEntry(typeAmountMap[type]!!.toFloat(), type))
             }
@@ -109,6 +112,7 @@ class HomeFragment : Fragment() {
         }.map { it.product.points }.map { GreenGrade.gradeScore(it) }
         val thisWeek = user.history.filter {
             val date = Date(it.timestamp)
+            Log.i("stats",date.toString())
             Instant.now().minus(7, ChronoUnit.DAYS) <= date.toInstant()
         }.map { it.product.points }.map { GreenGrade.gradeScore(it) }
 
