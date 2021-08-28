@@ -23,12 +23,8 @@ class ItemActivity : AppCompatActivity() {
         Log.i("ItemActivity",products.toString())
 
         productList.layoutManager = LinearLayoutManager(this)
-        val adapter = ProductAdapter(products)
+        val adapter = ProductAdapter(products,this)
         productList.adapter = adapter
-
     }
-
-
-
 
 }
