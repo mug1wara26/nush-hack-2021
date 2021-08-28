@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nush_hack21.R
 import com.example.nush_hack21.model.Product
+import com.example.nush_hack21.model.Record
 import com.example.nush_hack21.ui.image.adapters.ProductAdapter
+import com.example.nush_hack21.user
 
 
 class HistoryFragment : Fragment() {
@@ -25,9 +27,13 @@ class HistoryFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_history, container, false)
 
-        val items = ArrayList<Product>()
-        // Code to get items from mongodb
-        val productAdapter = ProductAdapter(items.toArray().toList() as List<Product>, requireContext())
+        user.history.sortBy { it.timestamp }
+        val products = ArrayList<Product>()
+        user.history.forEach {
+            products.add(it.product)
+        }
+
+        val productAdapter = ProductAdapter(products.toArray().toList() as List<Product>, requireContext())
 
         val historyRecyclerView: RecyclerView = view.findViewById(R.id.recycler_view_history)
         historyRecyclerView.layoutManager = LinearLayoutManager(context)

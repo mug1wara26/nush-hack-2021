@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.nush_hack21.R
 import com.example.nush_hack21.model.Product
+import com.example.nush_hack21.model.Record
 import com.example.nush_hack21.ui.image.adapters.ProductAdapter
 import kotlinx.android.synthetic.main.activity_item.*
 

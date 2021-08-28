@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -17,13 +18,17 @@ import androidx.core.content.ContextCompat
 import com.example.nush_hack21.R
 import com.example.nush_hack21.model.Product
 import com.example.nush_hack21.model.ProductSearch
-import com.example.nush_hack21.ui.notifications.GetBarcodeData
+import com.example.nush_hack21.model.Record
+import com.example.nush_hack21.user
+import com.google.gson.Gson
 import com.google.mlkit.vision.barcode.Barcode
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import kotlinx.android.synthetic.main.image_fragment.*
 import java.io.File
+import java.net.HttpURLConnection
+import java.net.URL
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -154,21 +159,28 @@ class ImageFragment : Fragment() {
     private fun getBarcodeData(barcode: Barcode) {
         val value = barcode.rawValue!!
         Log.d("BarcodeValue", value)
-        GetBarcodeData(value, object: GetBarcodeData.AsyncResponse {
-            override fun processFinish(output: String) {
+        // Send get request to this url https://api.upcitemdb.com/prod/trial/lookup?upc=
+        GetJson("https://api.upcitemdb.com/prod/trial/lookup?upc=$value", object: GetJson.AsyncResponse {
+            override fun processFinish(response: String) {
                 // This code is fucking ugly but im too lazy to import klaxon and deal with null safety shit
                 // Code will not break as long as api response format does not change
                 // total denotes if there is data on this barcode
-                val total = output.substring(output.indexOf("\"total\":")).substring(8, 9).toInt()
+                val total = response.substring(response.indexOf("\"total\":")).substring(8, 9).toInt()
                 if (total != 0) {
                     // Remove all characters before title
-                    val titleStart = output.substring(output.indexOf("\"title\":\"")).substring(9)
+                    val titleStart = response.substring(response.indexOf("\"title\":\"")).substring(9)
                     val title = titleStart.substring(0, titleStart.indexOf('"'))
 
                     ProductSearch(requireContext()).productSearch(title, {res ->
                         Log.i("productsearch",res.toString())
-                        if (res.shopping_results.isNotEmpty())
-                            items.add(Product(res.shopping_results[0].title,res.shopping_results[0].thumbnail))
+                        if (res.shopping_results.isNotEmpty()) {
+                            val product = Product(res.shopping_results[0].title,res.shopping_results[0].thumbnail)
+                            val record = Record(System.currentTimeMillis()/1000, product)
+                            items.add(product)
+
+                            user.history.add(record)
+                            val json = Gson().toJson(record)
+                        }
                     },{})
 
 //                    items.add(Product(title))
@@ -233,4 +245,36 @@ class ImageFragment : Fragment() {
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
     }
 
+}
+
+open class GetJson(
+    private val url: String,
+    private val listener: AsyncResponse
+): AsyncTask<Void, Void, String>() {
+    interface AsyncResponse {
+        fun processFinish(response: String)
+    }
+
+    override fun doInBackground(vararg p0: Void?): String {
+        Log.d("here", "here")
+        var response = ""
+        with(URL(url).openConnection() as HttpURLConnection) {
+            requestMethod = "GET"  // optional default is GET
+
+            Log.d("http get", "\nSent 'GET' request to URL : $url; Response Code : $responseCode")
+
+            inputStream.bufferedReader().use {
+                it.lines().forEach { line ->
+                    response += line + "\n"
+                }
+            }
+        }
+        Log.d("JSON", response)
+
+        return response
+    }
+
+    override fun onPostExecute(result: String) {
+        listener.processFinish(result)
+    }
 }

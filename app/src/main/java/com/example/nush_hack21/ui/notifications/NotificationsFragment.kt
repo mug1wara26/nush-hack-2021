@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.nush_hack21.R
 import com.example.nush_hack21.databinding.FragmentNotificationsBinding
+import com.example.nush_hack21.ui.image.GetJson
 import com.google.mlkit.vision.barcode.Barcode
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
@@ -147,7 +148,7 @@ private var _binding: FragmentNotificationsBinding? = null
   private fun getBarcodeData(barcode: Barcode) {
     val value = barcode.rawValue!!
     Log.d("BarcodeValue", value)
-    GetBarcodeData(value, object: GetBarcodeData.AsyncResponse {
+    GetJson(value, object: GetJson.AsyncResponse {
       override fun processFinish(output: String) {
         // This code is fucking ugly but im too lazy to import klaxon and deal with null safety shit
         // Code will not break as long as api response format does not change

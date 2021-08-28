@@ -7,12 +7,14 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
 
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
         android:theme="@style/Theme.Nush_hack21">
         <activity
             android:name=".ui.image.ProductInfoActivity"
@@ -25,11 +27,12 @@
         <activity
             android:name=".LoginActivity"
             android:exported="true"
-            android:label="Login Activity"></activity>
+            android:label="Login Activity" >
+        </activity>
         <activity
             android:name=".ui.image.ItemActivity"
             android:exported="true"
-            android:label="Item Activity"></activity>
+            android:label="Item Activity" />
         <activity
             android:name=".NavigationActivity"
             android:exported="true">

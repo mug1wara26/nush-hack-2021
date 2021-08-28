@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nush_hack21.R
 import com.example.nush_hack21.model.Product
+import com.example.nush_hack21.model.Record
 import com.example.nush_hack21.ui.image.ProductInfoActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.card_product.view.*
