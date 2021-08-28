@@ -40,7 +40,8 @@ class LoginActivity: AppCompatActivity() {
         if (requestCode == RC_SIGN_IN && resultCode == Activity.RESULT_OK) {
             // Successfully signed in
             if (FirebaseAuth.getInstance().currentUser != null) {
-                user = FirebaseAuth.getInstance().currentUser!!
+                val uid = FirebaseAuth.getInstance().currentUser!!.uid
+
 
                 val intent = Intent(applicationContext,NavigationActivity::class.java)
                 startActivity(intent)
