@@ -75,7 +75,7 @@
         android:layout_width="321dp"
         android:layout_height="32dp"
         android:layout_marginTop="28dp"
-        android:text="@string/number_of_companies_of_each_type_patronized_total_vs_weekly"
+        android:text="@string/proportion_types_of_companies_patronized"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
