@@ -9,15 +9,77 @@
 
     <TextView
         android:id="@+id/text_home"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:textAlignment="center"
-        android:textSize="20sp"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:textSize="36sp"
+        android:text="Welcome Back!"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.083"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintVertical_bias="0.05" />
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_margin="16dp"
+        android:layout_marginTop="44dp"
+        android:elevation="16dp"
+        android:padding="8dp"
+        app:cardCornerRadius="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/text_home"
+        tools:layout_editor_absoluteX="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/chart1Left"
+                android:layout_width="175dp"
+                android:layout_height="match_parent"
+                app:layout_constraintEnd_toStartOf="@+id/chart1Right"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/chart1Right"
+                android:layout_width="175dp"
+                android:layout_height="match_parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/chart1Left"
+                tools:layout_editor_absoluteY="0dp" />
+
+            <!--            <com.anychart.AnyChartView-->
+            <!--                android:id="@+id/chart1Left"-->
+            <!--                android:layout_width="200dp"-->
+            <!--                android:layout_height="match_parent"/>-->
+            <!--            <com.anychart.AnyChartView-->
+            <!--                android:id="@+id/chart1Right"-->
+            <!--                android:layout_width="200dp"-->
+            <!--                android:layout_height="match_parent"/>-->
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:layout_width="321dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="28dp"
+        android:text="@string/number_of_companies_of_each_type_patronized_total_vs_weekly"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/materialCardView" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
