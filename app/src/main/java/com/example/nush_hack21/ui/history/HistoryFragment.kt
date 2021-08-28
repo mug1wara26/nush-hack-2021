@@ -1,15 +1,14 @@
 package com.example.nush_hack21.ui.history
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nush_hack21.R
 import com.example.nush_hack21.model.Product
-import com.example.nush_hack21.model.Record
 import com.example.nush_hack21.ui.image.adapters.ProductAdapter
 import com.example.nush_hack21.user
 

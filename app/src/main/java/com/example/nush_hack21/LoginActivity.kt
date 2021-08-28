@@ -5,20 +5,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.example.nush_hack21.model.SerpapiResponse
+import com.android.volley.Request
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.example.nush_hack21.model.User
-import com.example.nush_hack21.ui.image.GetJson
+import com.example.nush_hack21.model.UserResponse
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.gson.Gson
-import com.google.gson.JsonParser
-import java.net.URLEncoder
+
 
 const val RC_SIGN_IN = 1
 lateinit var user: User
 val auth = FirebaseAuth.getInstance()
-const val dbUrl = "http://172.105.114.129:80/"
+const val dbUrl = "http://172.105.114.129/"
 
 class LoginActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,20 +51,42 @@ class LoginActivity: AppCompatActivity() {
                 val uid = auth.currentUser!!.uid
 
                 // Get user data from mongodb
-                val query = URLEncoder.encode(uid, "utf-8")
-                Log.d("user", dbUrl + "get_user?data=$query")
-                GetJson(dbUrl + "get_user?data=$query", object: GetJson.AsyncResponse {
-                    override fun processFinish(response: String) {
-                        Log.d("User json", response)
-//                        user = Gson().fromJson(response, User::class.java)
-//
-//                        val intent = Intent(applicationContext,NavigationActivity::class.java)
-//                        startActivity(intent)
-//                        finish()
-                    }
-                })
+                val queue = Volley.newRequestQueue(applicationContext)
+                val getUrl = dbUrl + "get_user?data=$uid"
+                val stringRequest = StringRequest(
+                    Request.Method.GET, getUrl,
+                    { response ->
+                        Log.i("GetUser", response)
+
+                        val userResponse = Gson().fromJson(response, UserResponse::class.java)
+                        if (userResponse.userExists) user = userResponse.user!!
+                        else {
+                            // Create user object and convert to json
+                            user = User(uid, displayName = auth.currentUser!!.displayName!!)
+                            val addUrl = dbUrl + "add_user?data=${Gson().toJson(user)}"
+
+                            // Add user to mongodb
+                            val addRequest = StringRequest(
+                                Request.Method.GET, addUrl, { addRespone ->
+                                    Log.i("AddUser", addRespone)
+                                }, {})
+                            queue.add(addRequest)
+                        }
+
+                        Log.i("user", user.toString())
+                        startNavigation()
+                    }, {})
+
+                queue.add(stringRequest)
+
             }
         }
+    }
+
+    private fun startNavigation() {
+        val intent = Intent(applicationContext, NavigationActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }
 

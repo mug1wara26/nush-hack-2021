@@ -1,8 +1,7 @@
 package com.example.nush_hack21.ui.image
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.example.nush_hack21.R
 import com.example.nush_hack21.model.Product
 import com.example.nush_hack21.model.ProductSearch

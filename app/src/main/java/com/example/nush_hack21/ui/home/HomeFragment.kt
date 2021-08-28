@@ -2,45 +2,18 @@ package com.example.nush_hack21.ui.home
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.android.volley.Request
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
-import com.anychart.AnyChart
 import com.example.nush_hack21.databinding.FragmentHomeBinding
-import com.anychart.AnyChart.pie
-
-import com.anychart.chart.common.dataentry.ValueDataEntry
-
-import com.anychart.chart.common.dataentry.DataEntry
-import kotlinx.android.synthetic.main.fragment_home.*
-import com.anychart.enums.LegendLayout
-
-import com.anychart.AnyChart.pie
-import com.anychart.enums.Align
-import com.anychart.scales.DateTime
-import com.example.nush_hack21.model.Record
-import com.example.nush_hack21.model.SerpapiResponse
-import com.example.nush_hack21.model.User
 import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.data.PieData
-
 import com.github.mikephil.charting.data.PieDataSet
-
 import com.github.mikephil.charting.data.PieEntry
-import com.github.mikephil.charting.formatter.ValueFormatter
-import com.google.gson.Gson
-import java.net.URLEncoder
+import kotlinx.android.synthetic.main.fragment_home.*
 import java.util.*
-import java.util.logging.SimpleFormatter
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
@@ -71,7 +44,6 @@ class HomeFragment : Fragment() {
     super.onViewCreated(view, savedInstanceState)
 
 //    populateCharts()
-      getUser()
 
   }
 
@@ -98,13 +70,12 @@ class HomeFragment : Fragment() {
       chart.invalidate()
     }
 
-    val user = getUser()
 
-    val lastWeek = user?.history?.filter{
-      val date = Date(it.timestamp)
+//    val lastWeek = user?.history?.filter{
+//      val date = Date(it.timestamp)
 //        Date().before <=
-        true
-    }
+//        true
+//    }
 
 
     val typeAmountMap: MutableMap<String, Int> = HashMap()
@@ -119,23 +90,6 @@ class HomeFragment : Fragment() {
 
 
   }
-
-  fun getUser() : User? {
-//    TODO
-
-    val queue = Volley.newRequestQueue(context)
-    val url = "http://172.105.114.129/get_product?data=Banco%20BBVA%20Argentina"
-    val stringRequest = StringRequest(
-      Request.Method.GET, url,
-      { response ->
-        Log.i("GetUser",response)
-      },
-      {  })
-    queue.add(stringRequest)
-//    return User("", listOf<Record>() as ArrayList<Record>,"")
-      return null
-  }
-
 
 
   override fun onDestroyView() {
