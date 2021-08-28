@@ -69,15 +69,15 @@ class ImageFragment : Fragment() {
             cameraCaptureBtn.isClickable = false
             takePhoto()
         }
-        showListItem.setOnClickListener {
-            val tmp = arrayListOf<Product>()
-            tmp.addAll(items)
-            Log.i("showlistitem",tmp.toString())
-            val intent = Intent(context,ItemActivity::class.java).apply {
-                putParcelableArrayListExtra("items", tmp)
-            }
-            startActivity(intent)
-        }
+//        showListItem.setOnClickListener {
+//            val tmp = arrayListOf<Product>()
+//            tmp.addAll(items)
+//            Log.i("showlistitem",tmp.toString())
+//            val intent = Intent(context,ItemActivity::class.java).apply {
+//                putParcelableArrayListExtra("items", tmp)
+//            }
+//            startActivity(intent)
+//        }
         outputDirectory = getOutputDirectory()
 
         cameraExecutor = Executors.newSingleThreadExecutor()

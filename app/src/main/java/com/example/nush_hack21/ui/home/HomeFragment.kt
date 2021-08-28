@@ -54,7 +54,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//    populateCharts()
+        populateCharts()
         historyShortcut.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_historyFragment) }
         cameraShortcut.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_imageFragment) }
     }
@@ -64,8 +64,21 @@ class HomeFragment : Fragment() {
         fun populateChart1(
             chart: PieChart,
             description: String,
-            typeAmountMap: MutableMap<String, Int>
+            typeAmountMap: MutableMap<String, Int>?
         ) {
+            if( typeAmountMap == null){
+                val colors: ArrayList<Int> = ArrayList(mutableListOf(Color.parseColor("#808080")))
+                val pieDataset = PieDataSet(listOf(PieEntry(1f,"No data")),"")
+                pieDataset.colors = colors
+                val pieData = PieData(pieDataset)
+                pieData.setDrawValues(false)
+                pieData.setValueFormatter(null)
+                chart.setDrawEntryLabels(false)
+                chart.description.text = description
+                chart.data = pieData
+                chart.invalidate()
+                return
+            }
             val pieEntries: ArrayList<PieEntry> = ArrayList()
             val colors: ArrayList<Int> = ArrayList()
             colors.add(Color.parseColor("#FFC300"))
@@ -97,14 +110,22 @@ class HomeFragment : Fragment() {
         }.map { it.product.points }.map { GreenGrade.gradeScore(it) }
 
         val typeAmountMap: MutableMap<String, Int> = HashMap()
-        typeAmountMap["Good"] = lastWeek.filter { it == GreenGrade.GOOD }.size
-        typeAmountMap["Moderate"] = lastWeek.filter { it == GreenGrade.MODERATE }.size
-        typeAmountMap["Nefarious"] = lastWeek.filter { it == GreenGrade.NEFARIOUS }.size
-        populateChart1(chart1Left, "Last Week", typeAmountMap)
-        typeAmountMap["Good"] = thisWeek.filter { it == GreenGrade.GOOD }.size
-        typeAmountMap["Moderate"] = thisWeek.filter { it == GreenGrade.MODERATE }.size
-        typeAmountMap["Nefarious"] = thisWeek.filter { it == GreenGrade.NEFARIOUS }.size
-        populateChart1(chart1Right, "This Week", typeAmountMap)
+        if(lastWeek.isEmpty()){
+            populateChart1(chart1Left, "Last Week", null)
+        } else {
+            typeAmountMap["Good"] = lastWeek.filter { it == GreenGrade.GOOD }.size
+            typeAmountMap["Moderate"] = lastWeek.filter { it == GreenGrade.MODERATE }.size
+            typeAmountMap["Nefarious"] = lastWeek.filter { it == GreenGrade.NEFARIOUS }.size
+            populateChart1(chart1Left, "Last Week", typeAmountMap)
+        }
+        if(thisWeek.isEmpty()){
+            populateChart1(chart1Right, "This Week", null)
+        } else {
+            typeAmountMap["Good"] = thisWeek.filter { it == GreenGrade.GOOD }.size
+            typeAmountMap["Moderate"] = thisWeek.filter { it == GreenGrade.MODERATE }.size
+            typeAmountMap["Nefarious"] = thisWeek.filter { it == GreenGrade.NEFARIOUS }.size
+            populateChart1(chart1Right, "This Week", typeAmountMap)
+        }
 
     }
 
