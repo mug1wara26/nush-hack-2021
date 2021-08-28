@@ -62,13 +62,13 @@ class LoginActivity: AppCompatActivity() {
                         if (userResponse.userExists) user = userResponse.user!!
                         else {
                             // Create user object and convert to json
-                            user = User(uid, displayName = auth.currentUser!!.displayName!!)
+                            user = User(uid, displayName = auth.currentUser!!.displayName)
                             val addUrl = dbUrl + "add_user?data=${Gson().toJson(user)}"
 
                             // Add user to mongodb
                             val addRequest = StringRequest(
-                                Request.Method.GET, addUrl, { addRespone ->
-                                    Log.i("AddUser", addRespone)
+                                Request.Method.GET, addUrl, { addResponse ->
+                                    Log.i("AddUser", addResponse)
                                 }, {})
                             queue.add(addRequest)
                         }
