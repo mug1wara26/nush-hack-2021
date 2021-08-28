@@ -18,6 +18,8 @@ import androidx.fragment.app.Fragment
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.beust.klaxon.JsonArray
+import com.beust.klaxon.Parser
 import com.example.nush_hack21.R
 import com.example.nush_hack21.dbUrl
 import com.example.nush_hack21.model.Product
@@ -26,6 +28,7 @@ import com.example.nush_hack21.model.Record
 import com.example.nush_hack21.model.SerpapiResponse
 import com.example.nush_hack21.user
 import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.google.mlkit.vision.barcode.Barcode
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
@@ -186,6 +189,7 @@ class ImageFragment : Fragment() {
 
                             user.history.add(record)
                             writeAppendHistToDB(record)
+                            setProductPoints(product)
                         }
                     },{})
 
@@ -195,6 +199,17 @@ class ImageFragment : Fragment() {
                 else Log.d("title", "no data on product")
             }
         }).execute()
+    }
+
+    private fun setProductPoints(product: Product) {
+        val queue = Volley.newRequestQueue(context);
+        val url = "${dbUrl}get_score?data=${product.title}"
+        val stringRequest = StringRequest(Request.Method.GET, url, {
+            Log.d("redbull", it)
+            val scoreStart = it.substring(it.indexOf("score"))
+            product.points = scoreStart.substring(scoreStart.indexOf(' ') + 1, scoreStart.indexOf(',')).toInt()
+        }, { })
+        queue.add(stringRequest)
     }
 
     fun writeAppendHistToDB(record: Record) {

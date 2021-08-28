@@ -7,5 +7,5 @@ import kotlinx.android.parcel.Parcelize
 data class Product (
     val title: String,
     val imageUrl: String?,
-    val points: Int = -1,
+    var points: Int = -1,
 ) : Parcelable
