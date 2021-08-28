@@ -21,7 +21,6 @@ class ProductSearch(
             { response ->
                 // Display the first 500 characters of the response string.
 //                textView.text = "Response is: ${response.substring(0, 500)}"
-
                 success(Gson().fromJson(response,SerpapiResponse::class.java))
             },
             { error() })
