@@ -22,9 +22,13 @@
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
                 app:contentScrim="@color/black"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                app:title="@{forumPost.title}">
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                <ImageView
+                    android:id="@+id/productPoster"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
+                </ImageView>
 
                 <com.google.android.material.appbar.MaterialToolbar
                     android:id="@+id/toolbar"
@@ -46,19 +50,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
+                    android:id="@+id/productDesc"
                     android:padding="20dp"
                     android:paddingVertical="40dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:text="I'd like help for this problem which has concerned me very much because I need to do this problem before the deen comes after me with a pound hammer and possibley give me a even worse dent which may cause permanent fractures to ones trachea and arthrities for the neck region which I do not have insurance to pay for"/>
+                    android:textAppearance="?attr/textAppearanceHeadline6"
+                    android:layout_height="wrap_content" />
             </androidx.cardview.widget.CardView>
             <View
                 android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="?android:attr/listDivider" />
+            <com.malinskiy.superrecyclerview.SuperRecyclerView
+                android:id="@+id/altProductList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
         </LinearLayout>
+
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -77,7 +77,8 @@ dependencies {
     implementation 'com.android.volley:volley:1.2.1'
     def picassoVersion = "2.71828"
     implementation "com.squareup.picasso:picasso:$picassoVersion"
-
+    implementation 'com.malinskiy:superrecyclerview:1.1.4' //super recyclerview
+//    implementation 'com.github.AnyChart:AnyChart-Android:1.1.2'
 
 
 
