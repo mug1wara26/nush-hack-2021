@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
@@ -26,6 +27,8 @@ import com.anychart.enums.LegendLayout
 import com.anychart.AnyChart.pie
 import com.anychart.enums.Align
 import com.anychart.scales.DateTime
+import com.example.nush_hack21.R
+import com.example.nush_hack21.model.GreenGrade
 import com.example.nush_hack21.model.Record
 import com.example.nush_hack21.model.SerpapiResponse
 import com.example.nush_hack21.model.User
@@ -39,6 +42,8 @@ import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.google.gson.Gson
 import java.net.URLEncoder
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 import java.util.*
 import java.util.logging.SimpleFormatter
 import kotlin.collections.ArrayList
@@ -71,7 +76,8 @@ class HomeFragment : Fragment() {
     super.onViewCreated(view, savedInstanceState)
 
 //    populateCharts()
-      getUser()
+    historyShortcut.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_historyFragment) }
+    cameraShortcut.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_imageFragment) }
 
   }
 
@@ -102,27 +108,28 @@ class HomeFragment : Fragment() {
 
     val lastWeek = user?.history?.filter{
       val date = Date(it.timestamp)
-//        Date().before <=
-        true
-    }
-
+        Instant.now().minus(2, ChronoUnit.WEEKS) <= date.toInstant() &&
+                date.toInstant() <= Instant.now().minus(2,ChronoUnit.WEEKS)
+    }?.map { it.product.points }?.map{ GreenGrade.gradeScore(it)}
+    val thisWeek = user?.history?.filter{
+      val date = Date(it.timestamp)
+      Instant.now().minus(1, ChronoUnit.WEEKS) <= date.toInstant()
+    }?.map{it.product.points}?.map{ GreenGrade.gradeScore(it)}
 
     val typeAmountMap: MutableMap<String, Int> = HashMap()
-    typeAmountMap["Good"] = 200
-    typeAmountMap["Moderate"] = 230
-    typeAmountMap["Nefarious"] = 100
+    typeAmountMap["Good"] = lastWeek?.filter{it == GreenGrade.GOOD}?.size ?: 0
+    typeAmountMap["Moderate"] = lastWeek?.filter{it == GreenGrade.MODERATE}?.size ?: 0
+    typeAmountMap["Nefarious"] = lastWeek?.filter{it == GreenGrade.NEFARIOUS}?.size ?: 0
     populateChart1(chart1Left,"Last Week",typeAmountMap)
-    typeAmountMap["Good"] = 200
-    typeAmountMap["Moderate"] = 230
-    typeAmountMap["Nefarious"] = 100
+    typeAmountMap["Good"] = thisWeek?.filter{it == GreenGrade.GOOD}?.size ?: 0
+    typeAmountMap["Moderate"] = thisWeek?.filter{it == GreenGrade.MODERATE}?.size ?: 0
+    typeAmountMap["Nefarious"] = thisWeek?.filter{it == GreenGrade.NEFARIOUS}?.size ?: 0
     populateChart1(chart1Right,"This Week",typeAmountMap)
-
 
   }
 
   fun getUser() : User? {
 //    TODO
-
     val queue = Volley.newRequestQueue(context)
     val url = "http://172.105.114.129/get_product?data=Banco%20BBVA%20Argentina"
     val stringRequest = StringRequest(
@@ -130,7 +137,7 @@ class HomeFragment : Fragment() {
       { response ->
         Log.i("GetUser",response)
       },
-      {  })
+      {})
     queue.add(stringRequest)
 //    return User("", listOf<Record>() as ArrayList<Record>,"")
       return null
