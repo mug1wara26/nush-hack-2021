@@ -60,7 +60,7 @@ class ImageFragment : Fragment() {
                 REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
         }
         cameraCaptureBtn.setOnClickListener {
-//            Toast.makeText(requireContext(),"Sending image request to server",Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(),"Processing image",Toast.LENGTH_SHORT).show()
             cameraCaptureBtn.isClickable = false
             takePhoto()
         }
