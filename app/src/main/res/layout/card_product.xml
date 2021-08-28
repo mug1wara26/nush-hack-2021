@@ -34,6 +34,22 @@
             android:textAppearance="?attr/textAppearanceHeadline6"
             tools:text="Product Name" />
 
+        <com.wssholmes.stark.circular_score.CircularScoreView
+            android:visibility="invisible"
+            android:id="@+id/productScoreView"
+            android:layout_width="115dp"
+            android:layout_height="115dp"
+            android:layout_marginBottom="32dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.434"
+            app:layout_constraintStart_toEndOf="@+id/productImg"
+            app:setSecondaryColor="@color/purple_700"
+            app:setTextColor="@color/purple_700"
+            app:setBackgroundColor="@color/white">
+
+        </com.wssholmes.stark.circular_score.CircularScoreView>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>
