@@ -73,12 +73,12 @@ class LoginActivity: AppCompatActivity() {
                             queue.add(addRequest)
                         }
 
-                        Log.i("user", user.toString())
                         startNavigation()
+
+                        Log.i("user", user.toString())
                     }, {})
 
                 queue.add(stringRequest)
-
             }
         }
     }

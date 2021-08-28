@@ -1,156 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.home.HomeFragment" >
+    android:layout_height="wrap_content"
+    tools:context=".ui.home.HomeFragment">
 
-    <TextView
-        android:id="@+id/text_home"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textAppearance="?attr/textAppearanceHeadline6"
-        android:textSize="36sp"
-        android:text="Welcome Back!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.083"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.05"
-/>
+        tools:context=".ui.home.HomeFragment" >
+
+        <TextView
+            android:id="@+id/text_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:textAlignment="center"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            android:textSize="36sp"
+            android:text="Welcome Back!"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.083"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.05"
+            />
 
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/materialCardView"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_margin="16dp"
-        android:layout_marginTop="68dp"
-        android:elevation="16dp"
-        android:padding="8dp"
-        app:cardCornerRadius="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/text_home"
-        tools:layout_editor_absoluteX="0dp"
-        app:cardBackgroundColor="@color/purple_700"
-        >
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/materialCardView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_height="200dp"
+            android:layout_margin="16dp"
+            android:layout_marginTop="68dp"
+            android:elevation="16dp"
+            android:padding="8dp"
+            app:cardCornerRadius="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/text_home"
+            tools:layout_editor_absoluteX="0dp"
+            app:cardBackgroundColor="@color/purple_700"
+            >
 
-            <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/chart1Left"
-                android:layout_width="175dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_constraintEnd_toStartOf="@+id/chart1Right"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent" />
+                android:orientation="horizontal">
 
-            <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/chart1Right"
-                android:layout_width="175dp"
-                android:layout_height="match_parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/chart1Left"
-                tools:layout_editor_absoluteY="0dp" />
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/chart1Left"
+                    android:layout_width="0dp"
+                    app:layout_constraintHorizontal_weight="1"
+                    android:layout_height="match_parent"
+                    app:layout_constraintEnd_toStartOf="@+id/chart1Right"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent" />
 
-            <!--            <com.anychart.AnyChartView-->
-            <!--                android:id="@+id/chart1Left"-->
-            <!--                android:layout_width="200dp"-->
-            <!--                android:layout_height="match_parent"/>-->
-            <!--            <com.anychart.AnyChartView-->
-            <!--                android:id="@+id/chart1Right"-->
-            <!--                android:layout_width="200dp"-->
-            <!--                android:layout_height="match_parent"/>-->
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.card.MaterialCardView>
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/chart1Right"
+                    android:layout_width="0dp"
+                    app:layout_constraintHorizontal_weight="1"
+                    android:layout_height="match_parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/chart1Left"
+                    tools:layout_editor_absoluteY="0dp" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="331dp"
-        android:layout_height="57dp"
-        android:layout_marginTop="28dp"
-        android:layout_marginBottom="16dp"
-        android:text="@string/proportion_of_ethical_brands_patronized_since_installing_grocer_s_choice"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/materialCardView2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialCardView" />
+                <!--            <com.anychart.AnyChartView-->
+                <!--                android:id="@+id/chart1Left"-->
+                <!--                android:layout_width="200dp"-->
+                <!--                android:layout_height="match_parent"/>-->
+                <!--            <com.anychart.AnyChartView-->
+                <!--                android:id="@+id/chart1Right"-->
+                <!--                android:layout_width="200dp"-->
+                <!--                android:layout_height="match_parent"/>-->
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_margin="8dp"
-        android:background="@color/browser_actions_bg_grey"
-        app:layout_constraintBottom_toTopOf="@+id/materialCardView2"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="331dp"
+            android:layout_height="57dp"
+            android:layout_marginTop="28dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/proportion_of_ethical_brands_patronized_since_installing_grocer_s_choice"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toTopOf="@+id/materialCardView2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/materialCardView" />
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/materialCardView2"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_margin="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="16dp"
-        android:elevation="16dp"
-        android:padding="8dp"
-        app:cardBackgroundColor="@color/purple_700"
-        app:cardCornerRadius="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <View
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="2dp"
+            android:layout_margin="8dp"
+            android:background="@color/browser_actions_bg_grey"
+            app:layout_constraintBottom_toTopOf="@+id/materialCardView2"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="340dp"
-                android:layout_height="93dp"
-                android:layout_margin="24dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:text="What are you waiting for? Scan your groceries and join the cause."
-                android:textAppearance="?attr/textAppearanceHeadline5"
-                android:textColor="@color/white"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/materialCardView2"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_margin="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="64dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="100dp"
+            android:elevation="16dp"
+            android:padding="8dp"
+            app:cardBackgroundColor="@color/purple_700"
+            app:cardCornerRadius="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView">
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/historyShortcut"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                android:src="@drawable/ic_baseline_history_24"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/cameraShortcut"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="24dp"
-                android:layout_marginBottom="16dp"
-                android:src="@drawable/ic_baseline_camera_alt_24"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/historyShortcut" />
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="93dp"
+                    android:layout_margin="24dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="What are you waiting for? Scan your groceries and join the cause."
+                    android:textAppearance="?attr/textAppearanceHeadline5"
+                    android:textColor="@color/white"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/historyShortcut"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:src="@drawable/ic_baseline_history_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
-    </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/cameraShortcut"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginBottom="16dp"
+                    android:src="@drawable/ic_baseline_camera_alt_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/historyShortcut" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
