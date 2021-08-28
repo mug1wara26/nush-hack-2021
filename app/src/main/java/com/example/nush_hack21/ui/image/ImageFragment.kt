@@ -35,8 +35,12 @@ import java.io.File
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
+import java.sql.Timestamp
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import kotlin.random.Random
 
 class ImageFragment : Fragment() {
 
@@ -181,7 +185,8 @@ class ImageFragment : Fragment() {
                         Log.i("productsearch",res.toString())
                         if (res.shopping_results.isNotEmpty()) {
                             val product = Product(res.shopping_results[0].title,res.shopping_results[0].thumbnail)
-                            val record = Record(System.currentTimeMillis()/1000, product)
+                            val record = Record(
+                                Timestamp.from(Instant.now()).time, product)
                             items.add(product)
 
                             user.history.add(record)

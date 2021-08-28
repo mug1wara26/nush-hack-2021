@@ -2,6 +2,7 @@ package com.example.nush_hack21.ui.home
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -99,8 +100,10 @@ class HomeFragment : Fragment() {
             chart.invalidate()
         }
 
+
         val lastWeek = user.history.filter {
             val date = Date(it.timestamp)
+            Log.i("stats",date.toString())
             Instant.now().minus(14,ChronoUnit.DAYS) <= date.toInstant() &&
                     date.toInstant() <= Instant.now().minus(7, ChronoUnit.DAYS)
         }.map { it.product.points }.map { GreenGrade.gradeScore(it) }
@@ -115,7 +118,7 @@ class HomeFragment : Fragment() {
         } else {
             typeAmountMap["Good"] = lastWeek.filter { it == GreenGrade.GOOD }.size
             typeAmountMap["Moderate"] = lastWeek.filter { it == GreenGrade.MODERATE }.size
-            typeAmountMap["Nefarious"] = lastWeek.filter { it == GreenGrade.NEFARIOUS }.size
+            typeAmountMap["questionable"] = lastWeek.filter { it == GreenGrade.QUESTIONABLE }.size
             populateChart1(chart1Left, "Last Week", typeAmountMap)
         }
         if(thisWeek.isEmpty()){
@@ -123,7 +126,7 @@ class HomeFragment : Fragment() {
         } else {
             typeAmountMap["Good"] = thisWeek.filter { it == GreenGrade.GOOD }.size
             typeAmountMap["Moderate"] = thisWeek.filter { it == GreenGrade.MODERATE }.size
-            typeAmountMap["Nefarious"] = thisWeek.filter { it == GreenGrade.NEFARIOUS }.size
+            typeAmountMap["Questionable"] = thisWeek.filter { it == GreenGrade.QUESTIONABLE }.size
             populateChart1(chart1Right, "This Week", typeAmountMap)
         }
 
