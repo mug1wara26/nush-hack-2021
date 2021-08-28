@@ -24,4 +24,6 @@
     <string name="welcome_back">Welcome back!</string>
     <string name="number_of_companies_of_each_type_patronized_total_vs_weekly">Number of companies of each type patronized. Total vs Weekly</string>
     <string name="proportion_types_of_companies_patronized">Proportion types of companies patronized</string>
+    <string name="proportion_of_ethical_brands_patronized">Proportion of ethical brands patronized</string>
+    <string name="proportion_of_ethical_brands_patronized_since_installing_grocer_s_choice">Proportion of ethical brands patronized since installing Grocer\'s Choice</string>
 </resources>
