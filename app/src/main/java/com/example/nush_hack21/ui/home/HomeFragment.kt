@@ -101,12 +101,12 @@ class HomeFragment : Fragment() {
 
         val lastWeek = user.history.filter {
             val date = Date(it.timestamp)
-            Instant.now().minus(2, ChronoUnit.WEEKS) <= date.toInstant() &&
-                    date.toInstant() <= Instant.now().minus(2, ChronoUnit.WEEKS)
+            Instant.now().minus(14,ChronoUnit.DAYS) <= date.toInstant() &&
+                    date.toInstant() <= Instant.now().minus(7, ChronoUnit.DAYS)
         }.map { it.product.points }.map { GreenGrade.gradeScore(it) }
         val thisWeek = user.history.filter {
             val date = Date(it.timestamp)
-            Instant.now().minus(1, ChronoUnit.WEEKS) <= date.toInstant()
+            Instant.now().minus(7, ChronoUnit.DAYS) <= date.toInstant()
         }.map { it.product.points }.map { GreenGrade.gradeScore(it) }
 
         val typeAmountMap: MutableMap<String, Int> = HashMap()

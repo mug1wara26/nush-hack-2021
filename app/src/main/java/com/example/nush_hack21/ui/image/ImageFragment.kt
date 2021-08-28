@@ -15,10 +15,15 @@ import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.android.volley.Request
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.example.nush_hack21.R
+import com.example.nush_hack21.dbUrl
 import com.example.nush_hack21.model.Product
 import com.example.nush_hack21.model.ProductSearch
 import com.example.nush_hack21.model.Record
+import com.example.nush_hack21.model.SerpapiResponse
 import com.example.nush_hack21.user
 import com.google.gson.Gson
 import com.google.mlkit.vision.barcode.Barcode
@@ -29,6 +34,7 @@ import kotlinx.android.synthetic.main.image_fragment.*
 import java.io.File
 import java.net.HttpURLConnection
 import java.net.URL
+import java.net.URLEncoder
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -179,7 +185,7 @@ class ImageFragment : Fragment() {
                             items.add(product)
 
                             user.history.add(record)
-                            val json = Gson().toJson(record)
+                            writeAppendHistToDB(record)
                         }
                     },{})
 
@@ -189,6 +195,17 @@ class ImageFragment : Fragment() {
                 else Log.d("title", "no data on product")
             }
         }).execute()
+    }
+
+    fun writeAppendHistToDB(record: Record) {
+//        const val dbUrl = "http://172.105.114.129/"
+        val queue = Volley.newRequestQueue(context);
+        val url = "${dbUrl}append_hist?data={\"uid\":\"${user.uid}\",\"hist\":${Gson().toJson(record)}}"
+        val stringRequest = StringRequest(
+            Request.Method.GET, url,
+            {},
+            {  })
+        queue.add(stringRequest)
     }
 
     private fun startCamera() {
