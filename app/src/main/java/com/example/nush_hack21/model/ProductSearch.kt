@@ -11,7 +11,7 @@ import java.net.URLEncoder
 class ProductSearch(
     context: Context
 ) {
-    val apiKey = "ac6a2bb332f5335ee7a69b9705b567c0933331e9f9c4d11d0f22a81602b88ea8"
+    val apiKey = "aa6d3ebb5a4b0bccc800f50c42217292152bdc001830594d220b660293230e06d"
     val queue = Volley.newRequestQueue(context)
     val baseurl = "https://serpapi.com/search.json?"
 
